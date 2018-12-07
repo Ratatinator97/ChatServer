@@ -42,7 +42,13 @@ func EntreeMsg(MsgType int) string {
 		if texte := '\n' {
 			valide = true
 		}
-		texte := strings.TrimSuffix(texte,'\n')
+	else if MsgType == 2 {
+		texte, _ := reader.ReadString('\n')
+		if texte != '\n' {
+			texte := strings.TrimSuffix(texte,'\n')
+			fmt.Print("Vous avez envoyé "+texte)
+		}
+	}
 	}
 }
 
