@@ -12,8 +12,13 @@ func main() {
 	//On se connecte au serveur
 	//Penser a handle les erreurs
 	message, _ := bufio.NewReader(connexion).ReadString('\n')
-	for ConnectionProcess(message) == true {
-		//delay
+	connecte := false
+	for connecte != true {
+		for EntreeServeur(message) != true {
+			//delay
+		}
+		fmt.Fprintf(connexion, "TCCHAT_REGISTER"+"\t"+EntreeMsg(1)+"\n")
+		connecte := true //Il faudra handle les erreurs ici
 	}
 	for {
 		//Lecture msg serveur
@@ -35,14 +40,6 @@ func main() {
 func traitermsg(msg string) []string {
 	tab_msg := strings.Split(msg, "\t")
 	return tab_msg
-}
-
-func ConnectionProcess(Message string) bool {
-	for EntreeServeur(Message) != true {
-		//delay
-	}
-	fmt.Fprintf(connexion, "TCCHAT_REGISTER"+'\t'+EntreeMsg(1)+"\n")
-	return true //Il faudra handle les erreurs ici
 }
 
 func EntreeServeur(S string) bool {
@@ -75,13 +72,13 @@ func EntreeMsg(MsgType int) string {
 	if MsgType == 1 {
 		//Nickname msg
 		fmt.Print("Qui etes vous ?: ")
+		texte, _ := reader.ReadString('\n')
 		for valide == false {
-			texte, _ := reader.ReadString('\n')
 			if texte != "\n" {
 				valide = true
 			}
 		}
-		texte := strings.Trimsuffix(texte, "\n")
+		texte := strings.TrimSuffix(texte, "\n")
 		return texte
 	} else if MsgType == 2 {
 		texte, _ := reader.ReadString('\n')
