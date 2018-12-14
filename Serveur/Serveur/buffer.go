@@ -1,0 +1,5 @@
+package Serveur
+
+func buffer(){
+
+}
