@@ -78,8 +78,8 @@ func EntreeMsg(MsgType int) string {
 				valide = true
 			}
 		}
-		texte := strings.TrimSuffix(texte, "\n")
-		return texte
+		NvTexte := strings.TrimSuffix(texte, "\n")
+		return NvTexte
 	} else if MsgType == 2 {
 		texte, _ := reader.ReadString('\n')
 		if texte != "\n" {
