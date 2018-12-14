@@ -22,7 +22,7 @@ func main() {
 	//On lit notre buffer d entree jusqu a ENTER
 	message, _ := bufio.NewReader(connexion).ReadString('\n')
 	fmt.Print("Serveur: "+message)//On affiche le msg recu
-	
+
 }
 func traitermsg(msg string ) {
 	tab_msg = strings.Split(msg,"\t")
@@ -38,10 +38,12 @@ func EntreeMsg(MsgType int) string {
 		//Nickname msg
 		fmt.Print("Qui etes vous ?: ")
 		for valide == false {
-		texte, _ := reader.ReadString('\n')
-		if texte := '\n' {
-			valide = true
+			texte, _ := reader.ReadString('\n')
+			if texte := '\n' {
+				valide = true
+			}
 		}
+	}
 	else if MsgType == 2 {
 		texte, _ := reader.ReadString('\n')
 		if texte != '\n' {
@@ -49,7 +51,4 @@ func EntreeMsg(MsgType int) string {
 			fmt.Print("Vous avez envoyé "+texte)
 		}
 	}
-	}
 }
-
-
