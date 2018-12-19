@@ -28,7 +28,7 @@ func main() {
 
 	fmt.Println("Etape connexion terminee")
 
-	go read(connexion,message)
+	go read(connexion)
 	go write(connexion)
 
 	exit:=false
@@ -42,7 +42,7 @@ func main() {
 func read(conn net.Conn){
 
 	for {
-		message, err := bufio.NewReader(connexion).ReadString('\n')
+		message1, err := bufio.NewReader(connexion).ReadString('\n')
 		if err != nil {
 			if err != io.EOF {
 				fmt.Println("Read error:", err)
