@@ -48,19 +48,19 @@ func read(conn net.Conn){
 				fmt.Println("Read error:", err)
 			}
 		}
-    if(message!=""):
+    if message!=""{
       tabS := strings.Split(message, "\t")
       switch tabS[0] {
-      case "TCCHAT_BCAST":
-        fmt.Println(tabS[]+"a dit: "+tabS[])
-      case "TCCHAT_USERIN":
-        fmt.Println(tabS[]+" s'est connecte")
-      case "TCCHAT_USEROUT":
-        fmt.Println(tabS[]+" s'est deconnecte")
-      default:
-        fmt.Println("Unexpected type of msg")
-
-    }
+      	case "TCCHAT_BCAST":
+        	fmt.Println(tabS[]+"a dit: "+tabS[])
+      	case "TCCHAT_USERIN":
+        	fmt.Println(tabS[]+" s'est connecte")
+      	case "TCCHAT_USEROUT":
+        	fmt.Println(tabS[]+" s'est deconnecte")
+      	default:
+        	fmt.Println("Unexpected type of msg")
+			}
+		}
 	}
 }
 
