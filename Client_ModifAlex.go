@@ -52,11 +52,11 @@ func read(conn net.Conn){
       tabS := strings.Split(message, "\t")
       switch tabS[0] {
       	case "TCCHAT_BCAST":
-        	fmt.Println(tabS[]+"a dit: "+tabS[])
+        	fmt.Println(tabS[]+"a dit: "+tabS[]) //TODO regarder structure msg
       	case "TCCHAT_USERIN":
-        	fmt.Println(tabS[]+" s'est connecte")
+        	fmt.Println(tabS[]+" s'est connecte") //TODO pareil
       	case "TCCHAT_USEROUT":
-        	fmt.Println(tabS[]+" s'est deconnecte")
+        	fmt.Println(tabS[]+" s'est deconnecte") //TODO pareil
       	default:
         	fmt.Println("Unexpected type of msg")
 			}
