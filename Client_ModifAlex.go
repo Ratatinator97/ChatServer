@@ -79,30 +79,28 @@ func ecritureMsgServeur(msgType int,conn net.Conn)  {
 
 	switch msgType {
 
-	case 1:
-		fmt.Print("Qui etes vous ?: ")
-		texte, _ := reader.ReadString('\n')
-		for  {
-			if texte != "\n" {
-				break
+		case 1:
+			fmt.Print("Qui etes vous ?: ")
+			texte, _ := reader.ReadString('\n')
+			for  {
+				if texte != "\n" {
+					break
+				}
 			}
-		}
-		fmt.Println("Votre nom est " + texte)
-		NvTexte := strings.TrimSuffix(texte, "\n")
+			fmt.Println("Votre nom est " + texte)
+			NvTexte := strings.TrimSuffix(texte, "\n")
 
-		fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+NvTexte+"\n")
+			fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+NvTexte+"\n")
 
 
-	case 2:
-		texte, _ := reader.ReadString('\n')
-		if texte != "\n" && texte!="" {
-			texte := strings.TrimSuffix(texte, "\n")
-			//fmt.Print("Envoi de message" + texte)
-			fmt.Fprintf(conn, "Prout\t"+texte+"\n")
-			fmt.Println("Vous avez ecrit: "+texte)
+		case 2:
+			texte, _ := reader.ReadString('\n')
+			if texte != "\n" && texte!="" {
+				texte := strings.TrimSuffix(texte, "\n")
+				//fmt.Print("Envoi de message" + texte)
+				fmt.Fprintf(conn, "Prout\t"+texte+"\n")//A le reception du serveur corriger ca
+				fmt.Println("Vous avez ecrit (a envlever): "+texte)
 
 		}
 	}
-
-
 }
