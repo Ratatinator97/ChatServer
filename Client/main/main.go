@@ -105,7 +105,6 @@ func ecritureMsgServeur(msgType int, conn net.Conn) (name string) {
 			texte := strings.TrimSuffix(texte, "\n")
 			//fmt.Print("Envoi de message" + texte)
 			fmt.Fprintf(conn, "TCCHAT_MESSAGE\t"+texte+"\n") //A le reception du serveur corriger ca
-			fmt.Println("Vous avez ecrit (a envlever): " + texte)
 		}
 	}
 	return
