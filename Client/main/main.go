@@ -57,6 +57,8 @@ func read(conn net.Conn) {
 				fmt.Println(tabS[1] + " s'est connecte") //TODO pareil
 			case "TCCHAT_USEROUT":
 				fmt.Println(tabS[1] + " s'est deconnecte") //TODO pareil
+			case "TCCHAT_PERSO":
+				fmt.Println(tabS[1])
 			default:
 				fmt.Println("Unexpected type of msg")
 			}
