@@ -39,7 +39,7 @@ func main() {
 }
 
 func read(conn net.Conn, yourName string) {
-
+	fmt.Println(yourName)
 	for {
 		message1, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
