@@ -25,7 +25,7 @@ func main() {
 	}
 
 	nameOfUser := ecritureMsgServeur(1, connexion)
-
+	fmt.Println(nameOfUser)
 	fmt.Println("Etape connexion terminee")
 
 	go read(connexion, nameOfUser)
@@ -98,6 +98,7 @@ func ecritureMsgServeur(msgType int, conn net.Conn) (name string) {
 
 		fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+nvTexte+"\n")
 		name = nvTexte
+		fmt.Println(name)
 
 	case 2:
 		name = ""
