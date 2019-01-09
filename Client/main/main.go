@@ -24,11 +24,11 @@ func main() {
 		}
 	}
 
-	ecritureMsgServeur(1, connexion)
+	nameOfUser := ecritureMsgServeur(1, connexion)
 
 	fmt.Println("Etape connexion terminee")
 
-	go read(connexion)
+	go read(connexion, nameOfUser)
 	go write(connexion)
 
 	exit := false
@@ -38,7 +38,7 @@ func main() {
 
 }
 
-func read(conn net.Conn) {
+func read(conn net.Conn, yourName string) {
 
 	for {
 		message1, err := bufio.NewReader(conn).ReadString('\n')
@@ -52,11 +52,16 @@ func read(conn net.Conn) {
 			tabS := strings.Split(message1, "\t")
 			switch tabS[0] {
 			case "TCCHAT_BCAST":
-				fmt.Println(tabS[1]) //TODO regarder structure msg
+				if ("[" + yourName + "]") == tabS[1] {
+
+				} else {
+					fmt.Println(tabS[1])
+				}
+				fmt.Println(tabS[1])
 			case "TCCHAT_USERIN":
-				fmt.Println(tabS[1]) //TODO pareil
+				fmt.Println(tabS[1])
 			case "TCCHAT_USEROUT":
-				fmt.Println(tabS[1]) //TODO pareil
+				fmt.Println(tabS[1])
 			case "TCCHAT_PERSO":
 				fmt.Println(tabS[1])
 			default:
@@ -70,13 +75,12 @@ func write(conn net.Conn) {
 	for {
 		ecritureMsgServeur(2, conn)
 	}
-
 }
 
-func ecritureMsgServeur(msgType int, conn net.Conn) {
+func ecritureMsgServeur(msgType int, conn net.Conn) (name string) {
 
 	reader := bufio.NewReader(os.Stdin)
-
+	name = ""
 	switch msgType {
 
 	case 1:
@@ -87,19 +91,23 @@ func ecritureMsgServeur(msgType int, conn net.Conn) {
 				break
 			}
 		}
-		fmt.Println("Votre nom est " + texte)
-		NvTexte := strings.TrimSuffix(texte, "\n")
 
-		fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+NvTexte+"\n")
+		fmt.Println("Votre nom est " + texte)
+		nvTexte := strings.TrimSuffix(texte, "\n")
+
+		fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+nvTexte+"\n")
+		name = nvTexte
 
 	case 2:
+		name = ""
 		texte, _ := reader.ReadString('\n')
 		if texte != "\n" && texte != "" {
 			texte := strings.TrimSuffix(texte, "\n")
 			//fmt.Print("Envoi de message" + texte)
 			fmt.Fprintf(conn, "TCCHAT_MESSAGE\t"+texte+"\n") //A le reception du serveur corriger ca
 			fmt.Println("Vous avez ecrit (a envlever): " + texte)
-
 		}
 	}
+	return
+
 }
