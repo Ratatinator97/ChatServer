@@ -45,7 +45,7 @@ func read(conn net.Conn) {
 		if err != nil {
 			if err != io.EOF {
 				fmt.Println("Read error:", err)
-				os.exit(1)
+				os.Exit(1)
 			}
 		}
 		if message1 != "" {
