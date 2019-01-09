@@ -1,5 +1,0 @@
-package Serveur
-
-func buffer(){
-
-}
