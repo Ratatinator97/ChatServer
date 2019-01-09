@@ -52,7 +52,8 @@ func read(conn net.Conn, yourName string) {
 			tabS := strings.Split(message1, "\t")
 			switch tabS[0] {
 			case "TCCHAT_BCAST":
-				if ("[" + yourName + "]") == tabS[1] {
+				split_tab := strings.Split(tabS[1], ":")
+				if ("[" + yourName + "]") == split_tab[0] {
 
 				} else {
 					fmt.Println(tabS[1])
