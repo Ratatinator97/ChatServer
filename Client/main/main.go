@@ -1,13 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"io"
 	"net"
+	"os"
+	"strings"
 )
-import "fmt"
-import "bufio"
-import "os"
-import "strings"
 
 func main() {
 	//On se connecte
@@ -31,44 +31,46 @@ func main() {
 	go read(connexion)
 	go write(connexion)
 
-	exit:=false
-	for exit==false{
-		exit=false
+	exit := false
+	for exit == false {
+		exit = false
 	}
 
 }
 
-
-func read(conn net.Conn){
+func read(conn net.Conn) {
 
 	for {
-
-		tmp := make([]byte, 256)
-		_, err := conn.Read(tmp)
-
+		message1, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			if err != io.EOF {
 				fmt.Println("Read error:", err)
 			}
 		}
-
-		message := string(tmp)
-
-		fmt.Println(message)
-
+		if message1 != "" {
+			tabS := strings.Split(message1, "\t")
+			switch tabS[0] {
+			case "TCCHAT_BCAST":
+				fmt.Println(tabS[1] + "a dit: " + tabS[2]) //TODO regarder structure msg
+			case "TCCHAT_USERIN":
+				fmt.Println(tabS[1] + " s'est connecte") //TODO pareil
+			case "TCCHAT_USEROUT":
+				fmt.Println(tabS[1] + " s'est deconnecte") //TODO pareil
+			default:
+				fmt.Println("Unexpected type of msg")
+			}
+		}
 	}
 }
 
-
-
-func write(conn net.Conn){
-	for{
+func write(conn net.Conn) {
+	for {
 		ecritureMsgServeur(2, conn)
 	}
 
 }
 
-func ecritureMsgServeur(msgType int,conn net.Conn)  {
+func ecritureMsgServeur(msgType int, conn net.Conn) {
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -77,7 +79,7 @@ func ecritureMsgServeur(msgType int,conn net.Conn)  {
 	case 1:
 		fmt.Print("Qui etes vous ?: ")
 		texte, _ := reader.ReadString('\n')
-		for  {
+		for {
 			if texte != "\n" {
 				break
 			}
@@ -87,17 +89,14 @@ func ecritureMsgServeur(msgType int,conn net.Conn)  {
 
 		fmt.Fprintf(conn, "TCCHAT_REGISTER"+"\t"+NvTexte+"\n")
 
-
 	case 2:
 		texte, _ := reader.ReadString('\n')
-		if texte != "\n" && texte!="" {
+		if texte != "\n" && texte != "" {
 			texte := strings.TrimSuffix(texte, "\n")
 			//fmt.Print("Envoi de message" + texte)
-			fmt.Fprintf(conn, "Prout\t"+texte+"\n")
-			fmt.Println(texte)
+			fmt.Fprintf(conn, "TCCHAT_MESSAGE\t"+texte+"\n") //A le reception du serveur corriger ca
+			fmt.Println("Vous avez ecrit (a envlever): " + texte)
 
 		}
 	}
-
-
 }
