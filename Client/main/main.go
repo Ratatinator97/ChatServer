@@ -54,13 +54,14 @@ func read(conn net.Conn, yourName string) {
 			case "TCCHAT_BCAST":
 				split_tab := strings.Split(tabS[1], ":")
 				fmt.Println(split_tab[0])
-				if ("[" + yourName + "]") == split_tab[0] {
+				inputName := "[" + yourName + "]"
+				fmt.Println(inputName)
+				if inputName == split_tab[0] {
 					fmt.Println("On a detecte le nom")
 				} else {
 					fmt.Println("Nom non detecte")
 					fmt.Println(tabS[1])
 				}
-				fmt.Println(tabS[1])
 			case "TCCHAT_USERIN":
 				fmt.Println(tabS[1])
 			case "TCCHAT_USEROUT":
