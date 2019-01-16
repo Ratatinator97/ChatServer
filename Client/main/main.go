@@ -1,5 +1,6 @@
 package main
 
+//Importation des bibliotheques requises
 import (
 	"bufio"
 	"fmt"
@@ -11,12 +12,12 @@ import (
 )
 
 func main() {
-	//On se connecte
-	connexion, _ := net.Dial("tcp", "127.0.0.1:8081") //LocalHost
-	//On se connecte au serveur
-	//Penser a handle les erreurs
+	//Connexion au serveur
+	connexion, _ := net.Dial("tcp", "192.168.43.31:8081") //LocalHost
+	//Buffer contenant la réponse du serveur
 	message, _ := bufio.NewReader(connexion).ReadString('\n')
 
+	// Attente jusqu'au TCCHAT_WELCOME
 	for {
 		TabS := strings.Split(message, "\t")
 		if TabS[0] == "TCCHAT_WELCOME" {
@@ -24,16 +25,17 @@ func main() {
 			break
 		}
 	}
-
+	// L'utilisateur rentre son nom
 	nameOfUser := messageCleaning(ecritureMsgServeur(1, connexion))
 
-
+	// Lancement de go routines pour lire les messages du serveur et du clavier utilisateur
 	go read(connexion, nameOfUser)
-	go ecritureMsgServeur(2,connexion)
+	go ecritureMsgServeur(2, connexion)
 
-	exit:=false
-	for exit==false{
-		exit=false
+	// Le main ne se termine pas tant que l'utilisateur n'a pas mis fin au prog
+	exit := false
+	for exit == false {
+		exit = false
 	}
 
 }
@@ -41,8 +43,10 @@ func main() {
 func read(conn net.Conn, nameOfUser string) {
 
 	for {
+		// Buffer msg serveur
 		message1, err := bufio.NewReader(conn).ReadString('\n')
-		if err != nil {
+
+		if err != nil { // Gestion des erreurs
 			if err != io.EOF {
 				fmt.Println("Read error:", err)
 				os.Exit(1)
@@ -51,18 +55,22 @@ func read(conn net.Conn, nameOfUser string) {
 		if message1 != "" {
 			tabS := strings.Split(message1, "\t")
 			switch tabS[0] {
+
 			case "TCCHAT_BCAST":
-				identifiant:= strings.Split(tabS[1], ":")
+				identifiant := strings.Split(tabS[1], ":")
 				inputName := "[" + nameOfUser + "]"
+
+				// Si le msg entrant correspond au nom de l'utilisateur
+				// Alors on affiche pas le msg (eviter les doublons)
 				if inputName != identifiant[0] {
 					fmt.Println(messageCleaning(tabS[1]))
 				}
 			case "TCCHAT_USERIN":
-				fmt.Println("\n"+tabS[1])
+				fmt.Println("\n" + tabS[1])
 			case "TCCHAT_USEROUT":
-				fmt.Println("\n"+tabS[1])
+				fmt.Println("\n" + tabS[1])
 			case "TCCHAT_PERSO":
-				fmt.Println("\n"+tabS[1])
+				fmt.Println("\n" + tabS[1])
 			default:
 				fmt.Println("Unexpected type of msg")
 			}
@@ -70,42 +78,50 @@ func read(conn net.Conn, nameOfUser string) {
 	}
 }
 
-
-func ecritureMsgServeur(msgType int, conn net.Conn) (string) {
+func ecritureMsgServeur(msgType int, conn net.Conn) string {
 
 	reader := bufio.NewReader(os.Stdin)
 
 	switch msgType {
 
 	case 1:
+		// Demander le nom a l'utilisateur
 		fmt.Print("Identifiant : ")
 		texte, _ := reader.ReadString('\n')
+
+		// Lire tant que pas appui sur ENTER
 		for {
 			if texte != "\n" {
 				break
 			}
 		}
 
+		// Epurer le nom
 		name := strings.TrimSuffix(texte, "\r\n")
 
-		if _,err := conn.Write([]byte("TCCHAT_REGISTER"+"\t"+name+"\n")); err!=nil{
+		// Envoi du msg de connexion au serveur
+		if _, err := conn.Write([]byte("TCCHAT_REGISTER" + "\t" + name + "\n")); err != nil {
 			fmt.Println("Read error : ")
 		}
 
 		return name
 
 	case 2:
-		exit:=false
-		for exit==false{
+		// tant que l'utilisateur n'a pas tappé exit
+		exit := false
+		for exit == false {
 			texte, _ := reader.ReadString('\n')
-			if texte != "\n" && texte != "" {
+			if texte != "\n" && texte != "" { // Verification msg pas vide
 				texte := messageCleaning(texte)
 
-				if(texte=="exit"){
-					exit=true
+				if texte == "exit" {
+					exit = true // l'utilisateur tappe exit
 				}
-				//fmt.Print("Envoi de message" + texte)
-				if _,err := conn.Write([]byte("TCCHAT_MESSAGE\t"+texte+"\n")); err!=nil{//A le reception du serveur corriger ca
+
+				// Si il n'y a pas d'erreur on demande au serveur de nous deconnecter
+				if _, err := conn.Write([]byte("TCCHAT_MESSAGE\t" + texte + "\n")); err != nil {
+
+					// Identique a un CTRL+C
 					os.Exit(-1)
 				}
 			}
@@ -115,8 +131,9 @@ func ecritureMsgServeur(msgType int, conn net.Conn) (string) {
 	return ""
 }
 
-func messageCleaning(message string) string{
-	newMessage:=""
+// Fonction d'épuration
+func messageCleaning(message string) string {
+	newMessage := ""
 	if runtime.GOOS == "windows" {
 		newMessage = strings.TrimRight(message, "\r\n")
 	} else {
