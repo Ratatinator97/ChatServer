@@ -32,7 +32,7 @@ func main() {
 	go read(connexion, nameOfUser)
 	go ecritureMsgServeur(2, connexion)
 
-	// Le main ne se termine pas tant que l'utilisateur n'a pas mis fin au prog
+	// Le main ne se termine pas tant que l'utilisateur n'a pas mis fin au programme
 	exit := false
 	for exit == false {
 		exit = false
@@ -61,7 +61,7 @@ func read(conn net.Conn, nameOfUser string) {
 				inputName := "[" + nameOfUser + "]"
 
 				// Si le msg entrant correspond au nom de l'utilisateur
-				// Alors on affiche pas le msg (eviter les doublons)
+				// Alors on n'affiche pas le msg (eviter les doublons)
 				if inputName != identifiant[0] {
 					fmt.Println(messageCleaning(tabS[1]))
 				}
@@ -89,7 +89,7 @@ func ecritureMsgServeur(msgType int, conn net.Conn) string {
 		fmt.Print("Identifiant : ")
 		texte, _ := reader.ReadString('\n')
 
-		// Lire tant que pas appui sur ENTER
+		// Lire tant que il n'y a pas d'appui sur ENTER
 		for {
 			if texte != "\n" {
 				break
@@ -107,7 +107,7 @@ func ecritureMsgServeur(msgType int, conn net.Conn) string {
 		return name
 
 	case 2:
-		// tant que l'utilisateur n'a pas tappé exit
+		// tant que l'utilisateur n'a pas tape exit
 		exit := false
 		for exit == false {
 			texte, _ := reader.ReadString('\n')
@@ -131,7 +131,7 @@ func ecritureMsgServeur(msgType int, conn net.Conn) string {
 	return ""
 }
 
-// Fonction d'épuration
+// Fonction d'epuration
 func messageCleaning(message string) string {
 	newMessage := ""
 	if runtime.GOOS == "windows" {
